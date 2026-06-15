@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arduino Памятка | Конструктор по вашему заданию</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+      background: #f4f6fc;
+      color: #0a2b3e;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* шапка */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #006d77, #2c7da0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .header p {
+      color: #2c3e50;
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    /* сетка карточек */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 2rem;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: #0a2b3e;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      transition: 0.2s;
+      display: block;
+      border: 1px solid #dce7f0;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 28px -12px rgba(0,109,119,0.2);
+      border-color: #83c5be;
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      color: #006d77;
+    }
+
+    .card p {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      line-height: 1.4;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e0f0ea;
+      padding: 0.2rem 0.8rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* страница детального просмотра */
+    .detail-page {
+      max-width: 950px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      padding: 2rem;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.1);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      background: #eef2f8;
+      padding: 0.5rem 1.2rem;
+      border-radius: 3rem;
+      text-decoration: none;
+      color: #1e4a5f;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      gap: 8px;
+    }
+
+    .back-btn:hover {
+      background: #dce5ef;
+    }
+
+    .component-title {
+      font-size: 2.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .wiring-box {
+      background: #f8fafc;
+      border-left: 6px solid #2c7da0;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+      margin: 1.8rem 0;
+    }
+
+    .wiring-box h3, .code-box h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    pre {
+      background: #0d2b3e;
+      color: #e2e8f0;
+      padding: 1.2rem;
+      border-radius: 1.2rem;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+    }
+
+    code {
+      font-family: monospace;
+    }
+
+    hr {
+      margin: 2rem 0;
+      border: none;
+      border-top: 2px dashed #cbdde6;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: #5b7f95;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 650px) {
+      body {
+        padding: 1rem;
+      }
+      .detail-page {
+        padding: 1.2rem;
+      }
+      .component-title {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container" id="root"></div>
+
+<script>
+  // --------------------------------------------------------------
+  //  ★★★★★  ВАШИ КОМПОНЕНТЫ — Я БУДУ МЕНЯТЬ ИХ ПО ВАШЕЙ КОМАНДЕ ★★★★★
+  // --------------------------------------------------------------
+  // Сейчас здесь 3 примера (LED, кнопка, потенциометр).
+  // Вы говорите: "удали потенциометр, добавь сервопривод с подключением: сигнал pin9, питание 5V, GND,
+  // код: Servo myservo; ..." — и я перепишу массив components.
+  
+  let componentsData = [
+    {
+      id: "led",
+      name: "Светодиод (LED)",
+      icon: "💡",
+      shortDesc: "Управление яркостью, мигание, ШИМ.",
+      wiring: `🔌 Подключение светодиода к Arduino UNO:
+• Анод (+) → цифровой пин 9 (через резистор 220 Ом)
+• Катод (-) → GND (общий минус)
+
+💡 Резистор ОБЯЗАТЕЛЕН, иначе светодиод сгорит. Рекомендуется 220–470 Ом.`,
+      code: `// Мигание светодиодом + плавное изменение яркости
+int ledPin = 9;  // пин с поддержкой ШИМ (~)
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  // Пример 1: мигание
+  digitalWrite(ledPin, HIGH);
+  delay(500);
+  digitalWrite(ledPin, LOW);
+  delay(500);
+  
+  // Раскомментируйте для плавного затухания/нарастания (ШИМ)
+  /*
+  for(int bright=0; bright<=255; bright++) {
+    analogWrite(ledPin, bright);
+    delay(5);
+  }
+  for(int bright=255; bright>=0; bright--) {
+    analogWrite(ledPin, bright);
+    delay(5);
+  }
+  */
+}`
+    },
+    {
+      id: "button",
+      name: "Тактовая кнопка",
+      icon: "🔘",
+      shortDesc: "Подтяжка к GND, чтение цифрового сигнала.",
+      wiring: `🔌 Подключение кнопки:
+• Один контакт кнопки → цифровой пин 2
+• Второй контакт кнопки → GND (земля)
+• Дополнительно: внутренний подтягивающий резистор Arduino (INPUT_PULLUP)
+
+⚠️ Важно: при подключении без внешнего резистора используем INPUT_PULLUP.`,
+      code: `// Чтение состояния кнопки (подтяжка к GND, LOW при нажатии)
+const int buttonPin = 2;
+const int ledPin = 13;  // встроенный светодиод
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int buttonState = digitalRead(buttonPin);
+  
+  // При нажатии кнопки (сигнал LOW) включаем LED
+  if (buttonState == LOW) {
+    digitalWrite(ledPin, HIGH);
+    Serial.println("Кнопка нажата!");
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+  delay(50);
+}`
+    },
+    {
+      id: "potentiometer",
+      name: "Потенциометр",
+      icon: "🎚️",
+      shortDesc: "Аналоговый вход, чтение 0-1023, управление яркостью.",
+      wiring: `🔌 Подключение потенциометра (10 кОм):
+• Левый вывод → 5V (питание)
+• Средний вывод → A0 (аналоговый вход)
+• Правый вывод → GND
+
+Вращая ручку, напряжение на A0 меняется от 0 до 5V.`,
+      code: `// Считывание потенциометра и управление светодиодом
+const int potPin = A0;
+const int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int potValue = analogRead(potPin);      // значение 0..1023
+  int brightness = map(potValue, 0, 1023, 0, 255);  // преобразуем в ШИМ 0-255
+  analogWrite(ledPin, brightness);
+  
+  Serial.print("Потенциометр: ");
+  Serial.print(potValue);
+  Serial.print(" -> Яркость: ");
+  Serial.println(brightness);
+  
+  delay(100);
+}`
+    }
+  ];
+
+  // --------------------------------------------------------------
+  //  РОУТИНГ на чистом JS (имитация нескольких страниц)
+  // --------------------------------------------------------------
+  let currentComponentId = null; // null = главная страница
+
+  function renderHome() {
+    const gridHtml = componentsData.map(comp => `
+      <a class="card" href="#" data-component-id="${comp.id}">
+        <div class="card-icon">${comp.icon}</div>
+        <h2>${comp.name}</h2>
+        <p>${comp.shortDesc}</p>
+        <span class="badge">Подключение + код →</span>
+      </a>
+    `).join('');
+    
+    return `
+      <div class="header">
+        <h1>📘 Arduino Памятка</h1>
+        <p>Подключение элементов + готовый код</p>
+        <p style="font-size:0.9rem; margin-top:0.8rem;">⚡ Вы управляете содержимым — говорите, какие компоненты добавить</p>
+      </div>
+      <div class="grid">
+        ${gridHtml || '<p style="grid-column:1/-1; text-align:center;">Нет компонентов. Добавьте их через команду.</p>'}
+      </div>
+      <footer>
+        🧩 Редактируемая памятка | Добавляйте новые элементы по вашему описанию
+      </footer>
+    `;
+  }
+
+  function renderDetail(componentId) {
+    const comp = componentsData.find(c => c.id === componentId);
+    if (!comp) {
+      // если не найден - вернуться на главную
+      currentComponentId = null;
+      return renderHome();
+    }
+    
+    return `
+      <div class="detail-page">
+        <a href="#" class="back-btn" id="backToHomeBtn">← На главную</a>
+        <div class="component-title">${comp.icon} ${comp.name}</div>
+        
+        <div class="wiring-box">
+          <h3>🔌 Подключение к Arduino</h3>
+          <div style="white-space: pre-wrap; font-family: monospace; background:#f1f5f9; padding:1rem; border-radius:1rem;">${escapeHtml(comp.wiring)}</div>
+        </div>
+        
+        <div class="code-box">
+          <h3>💻 Пример кода (Arduino IDE)</h3>
+          <pre><code>${escapeHtml(comp.code)}</code></pre>
+        </div>
+        <hr />
+        <p style="color:#2c7da0;">✨ Совет: не забывайте общий GND между компонентами и платой Arduino.</p>
+      </div>
+    `;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
+  }
+
+  function updateUI() {
+    const root = document.getElementById('root');
+    if (!root) return;
+    
+    if (currentComponentId === null) {
+      root.innerHTML = renderHome();
+      attachHomeEvents();
+    } else {
+      root.innerHTML = renderDetail(currentComponentId);
+      attachDetailEvents();
+    }
+  }
+
+  function attachHomeEvents() {
+    // все ссылки-карточки
+    document.querySelectorAll('.card[data-component-id]').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = card.getAttribute('data-component-id');
+        if (id) {
+          currentComponentId = id;
+          updateUI();
+          window.scrollTo(0, 0);
+        }
+      });
+    });
+  }
+
+  function attachDetailEvents() {
+    const backBtn = document.getElementById('backToHomeBtn');
+    if (backBtn) {
+      backBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        currentComponentId = null;
+        updateUI();
+        window.scrollTo(0, 0);
+      });
+    }
+  }
+
+  // Запуск приложения
+  updateUI();
+  
+  // --------------------------------------------------------------
+  //  🛠️ ИНСТРУКЦИЯ ДЛЯ ВАС (выводим в консоль как подсказку)
+  // --------------------------------------------------------------
+  console.log("%c⚡ Arduino Памятка готова к изменениям!", "color: #006d77; font-size: 16px");
+  console.log("%c👉 Чтобы добавить/удалить компонент — напишите мне в чат, и я обновлю массив componentsData. Пример:\n'Добавь сервопривод MG995: подключение сигнал к 9, питание 5V, GND. Код: Servo myservo; ...'", "background: #eef2f8; color: #0f3b4a; padding: 4px;");
+  console.log("%c👉 Также можно менять существующие: у кнопки поменять пины, добавить библиотеку и т.д.", "color: #2c7da0;");
+</script>
+</body>
+</html>
