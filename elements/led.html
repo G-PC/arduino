@@ -41,8 +41,6 @@
       color: #1e4a5f;
       font-weight: 500;
       margin-bottom: 2rem;
-      border: none;
-      cursor: pointer;
       font-size: 1rem;
     }
 
@@ -70,19 +68,13 @@
       font-size: 1.4rem;
       margin-bottom: 1rem;
       color: #006d77;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
     }
 
     .wiring-img {
-      max-width: 100%;
+      width: 50%;
       height: auto;
       border-radius: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      background: white;
-      padding: 10px;
     }
 
     .code-box {
@@ -92,13 +84,44 @@
       margin: 1.5rem 0;
     }
 
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     .code-box h3 {
       color: #90e0ef;
       font-size: 1.4rem;
-      margin-bottom: 1rem;
+      margin: 0;
+    }
+
+    .code-buttons {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      gap: 10px;
+    }
+
+    .copy-btn, .download-btn {
+      background: #2c7da0;
+      color: white;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    .copy-btn:hover, .download-btn:hover {
+      background: #1f5e7a;
+    }
+
+    .copy-btn:active {
+      transform: scale(0.95);
     }
 
     pre {
@@ -112,13 +135,24 @@
       margin: 0;
     }
 
-    .note {
-      background: #fff8e7;
-      padding: 0.8rem 1.2rem;
-      border-radius: 1rem;
-      color: #b45f06;
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #006d77;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border-radius: 2rem;
       font-size: 0.9rem;
-      margin-top: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
     }
 
     hr {
@@ -147,15 +181,18 @@
     
     <div class="wiring-image-box">
       <h3>🔌 Схема подключения</h3>
-      <img src="../images/led_schema.png" alt="Схема подключения светодиода"> alt="Схема подключения светодиода" class="wiring-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'background:#e2e8f0; padding:3rem; border-radius:1rem; text-align:center;\'>⚠️ Картинка не найдена. Положите файл <strong>images/led_schema.png</strong></div>'">
-      <div class="note">
-        💡 Подключение: анод (+) через резистор 220 Ом к пину 9, катод (-) к GND.
-      </div>
+      <img src="../images/led_schema.png" class="wiring-img">
     </div>
     
     <div class="code-box">
-      <h3>💻 Код для Arduino IDE</h3>
-      <pre><code>// Мигание светодиодом на пине 9
+      <div class="code-header">
+        <h3>💻 Код для Arduino IDE</h3>
+        <div class="code-buttons">
+          <button class="copy-btn" id="copyBtn">📋 Копировать код</button>
+          <button class="download-btn" id="downloadBtn">⬇️ Скачать .ino</button>
+        </div>
+      </div>
+      <pre id="codeBlock"><code>// Мигание светодиодом на пине 9
 int ledPin = 9;
 
 void setup() {
@@ -167,33 +204,72 @@ void loop() {
   delay(500);
   digitalWrite(ledPin, LOW);
   delay(500);
-}
-
-// Для плавного изменения яркости (ШИМ):
-/*
-void setup() {
-  pinMode(ledPin, OUTPUT);
-}
-
-void loop() {
-  for (int bright = 0; bright <= 255; bright++) {
-    analogWrite(ledPin, bright);
-    delay(5);
-  }
-  for (int bright = 255; bright >= 0; bright--) {
-    analogWrite(ledPin, bright);
-    delay(5);
-  }
-}
-*/</code></pre>
+}</code></pre>
     </div>
     
     <hr />
     <p style="color:#2c7da0; text-align:center;">✨ Не забудьте подключить резистор 220 Ом последовательно со светодиодом!</p>
   </div>
   <footer>
-    🔌 Схема: images/led_schema.png | Код: elements/led.html
+    🔌 Схема: images/led_schema.png
   </footer>
 </div>
+
+<!-- Всплывающее уведомление -->
+<div id="toast" class="toast">✓ Код скопирован!</div>
+
+<script>
+  const codeBlock = document.getElementById('codeBlock');
+  const copyBtn = document.getElementById('copyBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const toast = document.getElementById('toast');
+
+  // Получаем чистый текст кода (без тегов)
+  function getCodeText() {
+    return codeBlock.innerText;
+  }
+
+  // Показать уведомление
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2000);
+  }
+
+  // Копирование кода
+  copyBtn.addEventListener('click', async () => {
+    const code = getCodeText();
+    try {
+      await navigator.clipboard.writeText(code);
+      showToast('✓ Код скопирован!');
+    } catch (err) {
+      // fallback для старых браузеров
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showToast('✓ Код скопирован!');
+    }
+  });
+
+  // Скачивание .ino файла
+  downloadBtn.addEventListener('click', () => {
+    const code = getCodeText();
+    const blob = new Blob([code], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'led_blink.ino';  // имя файла
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('⬇️ Файл led_blink.ino скачан!');
+  });
+</script>
 </body>
 </html>
