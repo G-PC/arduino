@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arduino Памятка | Схемы подключения</title>
+  <title>Arduino Памятка | Главная</title>
   <style>
     * {
       margin: 0;
@@ -23,7 +23,6 @@
       margin: 0 auto;
     }
 
-    /* шапка */
     .header {
       text-align: center;
       margin-bottom: 3rem;
@@ -43,7 +42,6 @@
       font-size: 1.1rem;
     }
 
-    /* сетка карточек */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -61,7 +59,6 @@
       transition: 0.2s;
       display: block;
       border: 1px solid #dce7f0;
-      cursor: pointer;
     }
 
     .card:hover {
@@ -96,377 +93,54 @@
       font-weight: 500;
     }
 
-    /* страница детального просмотра */
-    .detail-page {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 2rem;
-      padding: 2rem;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.1);
-    }
-
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #eef2f8;
-      padding: 0.5rem 1.2rem;
-      border-radius: 3rem;
-      text-decoration: none;
-      color: #1e4a5f;
-      font-weight: 500;
-      margin-bottom: 2rem;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .back-btn:hover {
-      background: #dce5ef;
-    }
-
-    .component-title {
-      font-size: 2.2rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    /* блок со схемой подключения (картинка) */
-    .wiring-image-box {
-      background: #f8fafc;
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      text-align: center;
-    }
-
-    .wiring-image-box h3 {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      color: #006d77;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .wiring-img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      background: white;
-      padding: 10px;
-    }
-
-    .img-placeholder {
-      background: #e2e8f0;
-      border-radius: 1rem;
-      padding: 3rem;
-      text-align: center;
-      color: #64748b;
-      font-style: italic;
-    }
-
-    /* код */
-    .code-box {
-      background: #0d2b3e;
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .code-box h3 {
-      color: #90e0ef;
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    pre {
-      background: #1e293b;
-      color: #e2e8f0;
-      padding: 1.2rem;
-      border-radius: 1rem;
-      overflow-x: auto;
-      font-family: 'Fira Code', 'Courier New', monospace;
-      font-size: 0.85rem;
-      margin: 0;
-    }
-
-    code {
-      font-family: monospace;
-    }
-
-    hr {
-      margin: 2rem 0;
-      border: none;
-      border-top: 2px dashed #cbdde6;
-    }
-
-    .note {
-      background: #fff8e7;
-      padding: 0.8rem 1.2rem;
-      border-radius: 1rem;
-      color: #b45f06;
-      font-size: 0.9rem;
-      margin-top: 1rem;
-    }
-
     footer {
       text-align: center;
       margin-top: 3rem;
       color: #5b7f95;
       font-size: 0.8rem;
-    }
-
-    @media (max-width: 650px) {
-      body {
-        padding: 1rem;
-      }
-      .detail-page {
-        padding: 1.2rem;
-      }
-      .component-title {
-        font-size: 1.6rem;
-        flex-wrap: wrap;
-      }
+      border-top: 1px solid #dce7f0;
+      padding-top: 2rem;
     }
   </style>
 </head>
 <body>
-<div class="container" id="root"></div>
+<div class="container">
+  <div class="header">
+    <h1>📘 Arduino Памятка</h1>
+    <p>Схемы подключения + готовый код для каждого компонента</p>
+    <p style="font-size:0.9rem; margin-top:0.8rem;">⚡ Нажмите на элемент, чтобы увидеть схему и код</p>
+  </div>
 
-<script>
-  // --------------------------------------------------------------
-  //  КОМПОНЕНТЫ С КАРТИНКАМИ (вместо текстового описания подключения)
-  //  Вы говорите мне, что добавить/удалить, и я меняю этот массив
-  // --------------------------------------------------------------
-  
-  // ВАЖНО: чтобы картинки работали на GitHub Pages, положите файлы схем
-  // в папку images/ и укажите правильные пути.
-  // Сейчас для примера используются эмодзи-заглушки, но вы можете заменить
-  // на реальные URL вида "images/led_schema.png"
-  
-  const componentsData = [
-    {
-      id: "led",
-      name: "Светодиод (LED)",
-      icon: "💡",
-      shortDesc: "Управление яркостью, мигание, ШИМ.",
-      // Вместо текста — путь к картинке схемы подключения
-      wiringImage: "https://i.imgur.com/placeholder.png", // ЗАМЕНИТЕ НА ВАШУ КАРТИНКУ
-      // Но для демонстрации я создам текстовую заглушку с инструкцией, как добавить картинку
-      isPlaceholder: true,
-      code: `// Мигание светодиодом на пине 9
-int ledPin = 9;
+  <div class="grid">
+    <!-- Светодиод -->
+    <a href="elements/led.html" class="card">
+      <div class="card-icon">💡</div>
+      <h2>Светодиод (LED)</h2>
+      <p>Управление яркостью, мигание, ШИМ. Подключение через резистор.</p>
+      <span class="badge">📸 Схема + код →</span>
+    </a>
 
-void setup() {
-  pinMode(ledPin, OUTPUT);
-}
+    <!-- Кнопка -->
+    <a href="elements/button.html" class="card">
+      <div class="card-icon">🔘</div>
+      <h2>Тактовая кнопка</h2>
+      <p>Подтяжка к GND, чтение цифрового сигнала, управление LED.</p>
+      <span class="badge">📸 Схема + код →</span>
+    </a>
 
-void loop() {
-  digitalWrite(ledPin, HIGH);
-  delay(500);
-  digitalWrite(ledPin, LOW);
-  delay(500);
-}`
-    },
-    {
-      id: "button",
-      name: "Тактовая кнопка",
-      icon: "🔘",
-      shortDesc: "Подтяжка к GND, чтение цифрового сигнала.",
-      wiringImage: "https://i.imgur.com/placeholder.png",
-      isPlaceholder: true,
-      code: `// Кнопка на пине 2, светодиод на 13
-const int buttonPin = 2;
-const int ledPin = 13;
+    <!-- Потенциометр -->
+    <a href="elements/potentiometer.html" class="card">
+      <div class="card-icon">🎚️</div>
+      <h2>Потенциометр</h2>
+      <p>Аналоговый вход, управление яркостью светодиода.</p>
+      <span class="badge">📸 Схема + код →</span>
+    </a>
+  </div>
 
-void setup() {
-  pinMode(buttonPin, INPUT_PULLUP);
-  pinMode(ledPin, OUTPUT);
-}
-
-void loop() {
-  if (digitalRead(buttonPin) == LOW) {
-    digitalWrite(ledPin, HIGH);
-  } else {
-    digitalWrite(ledPin, LOW);
-  }
-  delay(50);
-}`
-    },
-    {
-      id: "potentiometer",
-      name: "Потенциометр",
-      icon: "🎚️",
-      shortDesc: "Аналоговый вход, управление яркостью LED",
-      wiringImage: "https://i.imgur.com/placeholder.png",
-      isPlaceholder: true,
-      code: `// Потенциометр на A0, LED на 9
-int potPin = A0;
-int ledPin = 9;
-
-void setup() {
-  pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  int val = analogRead(potPin);
-  int brightness = map(val, 0, 1023, 0, 255);
-  analogWrite(ledPin, brightness);
-  Serial.println(val);
-  delay(50);
-}`
-    }
-  ];
-
-  // --------------------------------------------------------------
-  //  РОУТИНГ
-  // --------------------------------------------------------------
-  let currentComponentId = null;
-
-  function renderHome() {
-    const gridHtml = componentsData.map(comp => `
-      <div class="card" data-component-id="${comp.id}">
-        <div class="card-icon">${comp.icon}</div>
-        <h2>${comp.name}</h2>
-        <p>${comp.shortDesc}</p>
-        <span class="badge">📸 Схема + код →</span>
-      </div>
-    `).join('');
-    
-    return `
-      <div class="header">
-        <h1>📘 Arduino Памятка</h1>
-        <p>Схемы подключения + готовый код</p>
-        <p style="font-size:0.9rem; margin-top:0.8rem;">⚡ Каждый компонент сопровождается наглядной картинкой подключения</p>
-      </div>
-      <div class="grid">
-        ${gridHtml || '<p style="grid-column:1/-1; text-align:center;">Нет компонентов. Добавьте их через команду.</p>'}
-      </div>
-      <footer>
-        🔌 Чтобы добавить свою схему — замените путь к картинке в массиве componentsData
-      </footer>
-    `;
-  }
-
-  function renderDetail(componentId) {
-    const comp = componentsData.find(c => c.id === componentId);
-    if (!comp) {
-      currentComponentId = null;
-      return renderHome();
-    }
-    
-    // генерация блока с картинкой
-    let wiringHtml = '';
-    if (comp.isPlaceholder) {
-      wiringHtml = `
-        <div class="img-placeholder">
-          🖼️ [ Место для вашей схемы подключения ]<br/>
-          <span style="font-size:0.85rem;">Замените path в компоненте "${comp.name}" на реальный URL картинки</span><br/>
-          <span style="font-size:0.75rem;">Пример: wiringImage: "images/led_schema.png"</span>
-        </div>
-      `;
-    } else if (comp.wiringImage) {
-      wiringHtml = `<img src="${comp.wiringImage}" alt="Схема подключения ${comp.name}" class="wiring-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>⚠️ Картинка не загружена. Проверьте путь: ${comp.wiringImage}</div>'">`;
-    } else {
-      wiringHtml = `<div class="img-placeholder">📸 Схема подключения: укажите путь к картинке</div>`;
-    }
-    
-    return `
-      <div class="detail-page">
-        <button class="back-btn" id="backToHomeBtn">← На главную</button>
-        <div class="component-title">
-          <span>${comp.icon}</span>
-          <span>${comp.name}</span>
-        </div>
-        
-        <div class="wiring-image-box">
-          <h3>🔌 Схема подключения</h3>
-          ${wiringHtml}
-          <div class="note">
-            💡 Совет: пины на схеме соответствуют коду. Убедитесь в общем GND.
-          </div>
-        </div>
-        
-        <div class="code-box">
-          <h3>💻 Код для Arduino IDE</h3>
-          <pre><code>${escapeHtml(comp.code)}</code></pre>
-        </div>
-        <hr />
-        <p style="color:#2c7da0; text-align:center;">✨ Схема подключения нагляднее тысячи слов</p>
-      </div>
-    `;
-  }
-
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
-  }
-
-  function updateUI() {
-    const root = document.getElementById('root');
-    if (!root) return;
-    
-    if (currentComponentId === null) {
-      root.innerHTML = renderHome();
-      attachHomeEvents();
-    } else {
-      root.innerHTML = renderDetail(currentComponentId);
-      attachDetailEvents();
-    }
-  }
-
-  function attachHomeEvents() {
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('click', (e) => {
-        const id = card.getAttribute('data-component-id');
-        if (id) {
-          currentComponentId = id;
-          updateUI();
-          window.scrollTo(0, 0);
-        }
-      });
-    });
-  }
-
-  function attachDetailEvents() {
-    const backBtn = document.getElementById('backToHomeBtn');
-    if (backBtn) {
-      backBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        currentComponentId = null;
-        updateUI();
-        window.scrollTo(0, 0);
-      });
-    }
-  }
-
-  // Запуск
-  updateUI();
-  
-  // Инструкция в консоль
-  console.log("%c📸 Arduino Памятка со СХЕМАМИ-КАРТИНКАМИ!", "color: #006d77; font-size: 14px");
-  console.log("%c👉 КАК ДОБАВИТЬ РЕАЛЬНУЮ КАРТИНКУ:", "font-weight: bold; color: #b45f06");
-  console.log("%c1. Положите файл схемы (например led_connection.png) в папку images/ вашего репозитория", "color: #2c3e50");
-  console.log("%c2. В массиве componentsData найдите нужный компонент и измените:", "color: #2c3e50");
-  console.log("%c   wiringImage: 'images/led_connection.png',", "background: #f0f0f0; padding: 2px; font-family: monospace");
-  console.log("%c   isPlaceholder: false,", "background: #f0f0f0; padding: 2px; font-family: monospace");
-  console.log("%c3. Обновите страницу — картинка появится вместо заглушки", "color: #2c3e50");
-  console.log("%c🔥 Вы также можете просто сказать мне: 'Добавь компонент Датчик движения с картинкой images/pir.jpg' — я сгенерирую код!", "background: #e0f0ea; padding: 4px;");
-</script>
+  <footer>
+    🔌 Все схемы в папке images/ | Коды в папке elements/<br>
+    Чтобы добавить новый элемент — создайте .html в elements/ и добавьте карточку на главную
+  </footer>
+</div>
 </body>
 </html>
