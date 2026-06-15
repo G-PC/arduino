@@ -154,19 +154,6 @@
     .toast.show {
       opacity: 1;
     }
-
-    hr {
-      margin: 2rem 0;
-      border: none;
-      border-top: 2px dashed #cbdde6;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 2rem;
-      color: #5b7f95;
-      font-size: 0.8rem;
-    }
   </style>
 </head>
 <body>
@@ -206,16 +193,9 @@ void loop() {
   delay(500);
 }</code></pre>
     </div>
-    
-    <hr />
-    <p style="color:#2c7da0; text-align:center;">✨ Не забудьте подключить резистор 220 Ом последовательно со светодиодом!</p>
   </div>
-  <footer>
-    🔌 Схема: images/led_schema.png
-  </footer>
 </div>
 
-<!-- Всплывающее уведомление -->
 <div id="toast" class="toast">✓ Код скопирован!</div>
 
 <script>
@@ -224,12 +204,10 @@ void loop() {
   const downloadBtn = document.getElementById('downloadBtn');
   const toast = document.getElementById('toast');
 
-  // Получаем чистый текст кода (без тегов)
   function getCodeText() {
     return codeBlock.innerText;
   }
 
-  // Показать уведомление
   function showToast(message) {
     toast.textContent = message;
     toast.classList.add('show');
@@ -238,14 +216,12 @@ void loop() {
     }, 2000);
   }
 
-  // Копирование кода
   copyBtn.addEventListener('click', async () => {
     const code = getCodeText();
     try {
       await navigator.clipboard.writeText(code);
       showToast('✓ Код скопирован!');
     } catch (err) {
-      // fallback для старых браузеров
       const textarea = document.createElement('textarea');
       textarea.value = code;
       document.body.appendChild(textarea);
@@ -256,14 +232,13 @@ void loop() {
     }
   });
 
-  // Скачивание .ino файла
   downloadBtn.addEventListener('click', () => {
     const code = getCodeText();
     const blob = new Blob([code], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'led_blink.ino';  // имя файла
+    a.download = 'led_blink.ino';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
