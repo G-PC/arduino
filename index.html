@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arduino Памятка | Конструктор по вашему заданию</title>
+  <title>Arduino Памятка | Схемы подключения</title>
   <style>
     * {
       margin: 0;
@@ -13,7 +13,7 @@
 
     body {
       font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
-      background: #f4f6fc;
+      background: #f0f4f8;
       color: #0a2b3e;
       padding: 2rem 1.5rem;
     }
@@ -46,7 +46,7 @@
     /* сетка карточек */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 2rem;
       margin: 2rem 0;
     }
@@ -61,6 +61,7 @@
       transition: 0.2s;
       display: block;
       border: 1px solid #dce7f0;
+      cursor: pointer;
     }
 
     .card:hover {
@@ -75,7 +76,7 @@
     }
 
     .card h2 {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       margin-bottom: 0.5rem;
       color: #006d77;
     }
@@ -97,7 +98,7 @@
 
     /* страница детального просмотра */
     .detail-page {
-      max-width: 950px;
+      max-width: 1000px;
       margin: 0 auto;
       background: white;
       border-radius: 2rem;
@@ -107,6 +108,8 @@
 
     .back-btn {
       display: inline-flex;
+      align-items: center;
+      gap: 8px;
       background: #eef2f8;
       padding: 0.5rem 1.2rem;
       border-radius: 3rem;
@@ -114,7 +117,9 @@
       color: #1e4a5f;
       font-weight: 500;
       margin-bottom: 2rem;
-      gap: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
     }
 
     .back-btn:hover {
@@ -123,34 +128,75 @@
 
     .component-title {
       font-size: 2.2rem;
-      margin-bottom: 0.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    .wiring-box {
+    /* блок со схемой подключения (картинка) */
+    .wiring-image-box {
       background: #f8fafc;
-      border-left: 6px solid #2c7da0;
-      padding: 1.2rem;
       border-radius: 1.5rem;
-      margin: 1.8rem 0;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
     }
 
-    .wiring-box h3, .code-box h3 {
-      font-size: 1.5rem;
+    .wiring-image-box h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #006d77;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .wiring-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background: white;
+      padding: 10px;
+    }
+
+    .img-placeholder {
+      background: #e2e8f0;
+      border-radius: 1rem;
+      padding: 3rem;
+      text-align: center;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    /* код */
+    .code-box {
+      background: #0d2b3e;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .code-box h3 {
+      color: #90e0ef;
+      font-size: 1.4rem;
       margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 8px;
     }
 
     pre {
-      background: #0d2b3e;
+      background: #1e293b;
       color: #e2e8f0;
       padding: 1.2rem;
-      border-radius: 1.2rem;
+      border-radius: 1rem;
       overflow-x: auto;
-      font-family: 'Fira Code', monospace;
+      font-family: 'Fira Code', 'Courier New', monospace;
       font-size: 0.85rem;
-      margin: 1rem 0;
+      margin: 0;
     }
 
     code {
@@ -161,6 +207,15 @@
       margin: 2rem 0;
       border: none;
       border-top: 2px dashed #cbdde6;
+    }
+
+    .note {
+      background: #fff8e7;
+      padding: 0.8rem 1.2rem;
+      border-radius: 1rem;
+      color: #b45f06;
+      font-size: 0.9rem;
+      margin-top: 1rem;
     }
 
     footer {
@@ -179,6 +234,7 @@
       }
       .component-title {
         font-size: 1.6rem;
+        flex-wrap: wrap;
       }
     }
   </style>
@@ -188,48 +244,37 @@
 
 <script>
   // --------------------------------------------------------------
-  //  ★★★★★  ВАШИ КОМПОНЕНТЫ — Я БУДУ МЕНЯТЬ ИХ ПО ВАШЕЙ КОМАНДЕ ★★★★★
+  //  КОМПОНЕНТЫ С КАРТИНКАМИ (вместо текстового описания подключения)
+  //  Вы говорите мне, что добавить/удалить, и я меняю этот массив
   // --------------------------------------------------------------
-  // Сейчас здесь 3 примера (LED, кнопка, потенциометр).
-  // Вы говорите: "удали потенциометр, добавь сервопривод с подключением: сигнал pin9, питание 5V, GND,
-  // код: Servo myservo; ..." — и я перепишу массив components.
   
-  let componentsData = [
+  // ВАЖНО: чтобы картинки работали на GitHub Pages, положите файлы схем
+  // в папку images/ и укажите правильные пути.
+  // Сейчас для примера используются эмодзи-заглушки, но вы можете заменить
+  // на реальные URL вида "images/led_schema.png"
+  
+  const componentsData = [
     {
       id: "led",
       name: "Светодиод (LED)",
       icon: "💡",
       shortDesc: "Управление яркостью, мигание, ШИМ.",
-      wiring: `🔌 Подключение светодиода к Arduino UNO:
-• Анод (+) → цифровой пин 9 (через резистор 220 Ом)
-• Катод (-) → GND (общий минус)
-
-💡 Резистор ОБЯЗАТЕЛЕН, иначе светодиод сгорит. Рекомендуется 220–470 Ом.`,
-      code: `// Мигание светодиодом + плавное изменение яркости
-int ledPin = 9;  // пин с поддержкой ШИМ (~)
+      // Вместо текста — путь к картинке схемы подключения
+      wiringImage: "https://i.imgur.com/placeholder.png", // ЗАМЕНИТЕ НА ВАШУ КАРТИНКУ
+      // Но для демонстрации я создам текстовую заглушку с инструкцией, как добавить картинку
+      isPlaceholder: true,
+      code: `// Мигание светодиодом на пине 9
+int ledPin = 9;
 
 void setup() {
   pinMode(ledPin, OUTPUT);
 }
 
 void loop() {
-  // Пример 1: мигание
   digitalWrite(ledPin, HIGH);
   delay(500);
   digitalWrite(ledPin, LOW);
   delay(500);
-  
-  // Раскомментируйте для плавного затухания/нарастания (ШИМ)
-  /*
-  for(int bright=0; bright<=255; bright++) {
-    analogWrite(ledPin, bright);
-    delay(5);
-  }
-  for(int bright=255; bright>=0; bright--) {
-    analogWrite(ledPin, bright);
-    delay(5);
-  }
-  */
 }`
     },
     {
@@ -237,29 +282,20 @@ void loop() {
       name: "Тактовая кнопка",
       icon: "🔘",
       shortDesc: "Подтяжка к GND, чтение цифрового сигнала.",
-      wiring: `🔌 Подключение кнопки:
-• Один контакт кнопки → цифровой пин 2
-• Второй контакт кнопки → GND (земля)
-• Дополнительно: внутренний подтягивающий резистор Arduino (INPUT_PULLUP)
-
-⚠️ Важно: при подключении без внешнего резистора используем INPUT_PULLUP.`,
-      code: `// Чтение состояния кнопки (подтяжка к GND, LOW при нажатии)
+      wiringImage: "https://i.imgur.com/placeholder.png",
+      isPlaceholder: true,
+      code: `// Кнопка на пине 2, светодиод на 13
 const int buttonPin = 2;
-const int ledPin = 13;  // встроенный светодиод
+const int ledPin = 13;
 
 void setup() {
   pinMode(buttonPin, INPUT_PULLUP);
   pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
 }
 
 void loop() {
-  int buttonState = digitalRead(buttonPin);
-  
-  // При нажатии кнопки (сигнал LOW) включаем LED
-  if (buttonState == LOW) {
+  if (digitalRead(buttonPin) == LOW) {
     digitalWrite(ledPin, HIGH);
-    Serial.println("Кнопка нажата!");
   } else {
     digitalWrite(ledPin, LOW);
   }
@@ -270,16 +306,12 @@ void loop() {
       id: "potentiometer",
       name: "Потенциометр",
       icon: "🎚️",
-      shortDesc: "Аналоговый вход, чтение 0-1023, управление яркостью.",
-      wiring: `🔌 Подключение потенциометра (10 кОм):
-• Левый вывод → 5V (питание)
-• Средний вывод → A0 (аналоговый вход)
-• Правый вывод → GND
-
-Вращая ручку, напряжение на A0 меняется от 0 до 5V.`,
-      code: `// Считывание потенциометра и управление светодиодом
-const int potPin = A0;
-const int ledPin = 9;
+      shortDesc: "Аналоговый вход, управление яркостью LED",
+      wiringImage: "https://i.imgur.com/placeholder.png",
+      isPlaceholder: true,
+      code: `// Потенциометр на A0, LED на 9
+int potPin = A0;
+int ledPin = 9;
 
 void setup() {
   pinMode(ledPin, OUTPUT);
@@ -287,46 +319,41 @@ void setup() {
 }
 
 void loop() {
-  int potValue = analogRead(potPin);      // значение 0..1023
-  int brightness = map(potValue, 0, 1023, 0, 255);  // преобразуем в ШИМ 0-255
+  int val = analogRead(potPin);
+  int brightness = map(val, 0, 1023, 0, 255);
   analogWrite(ledPin, brightness);
-  
-  Serial.print("Потенциометр: ");
-  Serial.print(potValue);
-  Serial.print(" -> Яркость: ");
-  Serial.println(brightness);
-  
-  delay(100);
+  Serial.println(val);
+  delay(50);
 }`
     }
   ];
 
   // --------------------------------------------------------------
-  //  РОУТИНГ на чистом JS (имитация нескольких страниц)
+  //  РОУТИНГ
   // --------------------------------------------------------------
-  let currentComponentId = null; // null = главная страница
+  let currentComponentId = null;
 
   function renderHome() {
     const gridHtml = componentsData.map(comp => `
-      <a class="card" href="#" data-component-id="${comp.id}">
+      <div class="card" data-component-id="${comp.id}">
         <div class="card-icon">${comp.icon}</div>
         <h2>${comp.name}</h2>
         <p>${comp.shortDesc}</p>
-        <span class="badge">Подключение + код →</span>
-      </a>
+        <span class="badge">📸 Схема + код →</span>
+      </div>
     `).join('');
     
     return `
       <div class="header">
         <h1>📘 Arduino Памятка</h1>
-        <p>Подключение элементов + готовый код</p>
-        <p style="font-size:0.9rem; margin-top:0.8rem;">⚡ Вы управляете содержимым — говорите, какие компоненты добавить</p>
+        <p>Схемы подключения + готовый код</p>
+        <p style="font-size:0.9rem; margin-top:0.8rem;">⚡ Каждый компонент сопровождается наглядной картинкой подключения</p>
       </div>
       <div class="grid">
         ${gridHtml || '<p style="grid-column:1/-1; text-align:center;">Нет компонентов. Добавьте их через команду.</p>'}
       </div>
       <footer>
-        🧩 Редактируемая памятка | Добавляйте новые элементы по вашему описанию
+        🔌 Чтобы добавить свою схему — замените путь к картинке в массиве componentsData
       </footer>
     `;
   }
@@ -334,27 +361,48 @@ void loop() {
   function renderDetail(componentId) {
     const comp = componentsData.find(c => c.id === componentId);
     if (!comp) {
-      // если не найден - вернуться на главную
       currentComponentId = null;
       return renderHome();
     }
     
+    // генерация блока с картинкой
+    let wiringHtml = '';
+    if (comp.isPlaceholder) {
+      wiringHtml = `
+        <div class="img-placeholder">
+          🖼️ [ Место для вашей схемы подключения ]<br/>
+          <span style="font-size:0.85rem;">Замените path в компоненте "${comp.name}" на реальный URL картинки</span><br/>
+          <span style="font-size:0.75rem;">Пример: wiringImage: "images/led_schema.png"</span>
+        </div>
+      `;
+    } else if (comp.wiringImage) {
+      wiringHtml = `<img src="${comp.wiringImage}" alt="Схема подключения ${comp.name}" class="wiring-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>⚠️ Картинка не загружена. Проверьте путь: ${comp.wiringImage}</div>'">`;
+    } else {
+      wiringHtml = `<div class="img-placeholder">📸 Схема подключения: укажите путь к картинке</div>`;
+    }
+    
     return `
       <div class="detail-page">
-        <a href="#" class="back-btn" id="backToHomeBtn">← На главную</a>
-        <div class="component-title">${comp.icon} ${comp.name}</div>
+        <button class="back-btn" id="backToHomeBtn">← На главную</button>
+        <div class="component-title">
+          <span>${comp.icon}</span>
+          <span>${comp.name}</span>
+        </div>
         
-        <div class="wiring-box">
-          <h3>🔌 Подключение к Arduino</h3>
-          <div style="white-space: pre-wrap; font-family: monospace; background:#f1f5f9; padding:1rem; border-radius:1rem;">${escapeHtml(comp.wiring)}</div>
+        <div class="wiring-image-box">
+          <h3>🔌 Схема подключения</h3>
+          ${wiringHtml}
+          <div class="note">
+            💡 Совет: пины на схеме соответствуют коду. Убедитесь в общем GND.
+          </div>
         </div>
         
         <div class="code-box">
-          <h3>💻 Пример кода (Arduino IDE)</h3>
+          <h3>💻 Код для Arduino IDE</h3>
           <pre><code>${escapeHtml(comp.code)}</code></pre>
         </div>
         <hr />
-        <p style="color:#2c7da0;">✨ Совет: не забывайте общий GND между компонентами и платой Arduino.</p>
+        <p style="color:#2c7da0; text-align:center;">✨ Схема подключения нагляднее тысячи слов</p>
       </div>
     `;
   }
@@ -366,8 +414,6 @@ void loop() {
       if (m === '<') return '&lt;';
       if (m === '>') return '&gt;';
       return m;
-    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-      return c;
     });
   }
 
@@ -385,10 +431,8 @@ void loop() {
   }
 
   function attachHomeEvents() {
-    // все ссылки-карточки
-    document.querySelectorAll('.card[data-component-id]').forEach(card => {
+    document.querySelectorAll('.card').forEach(card => {
       card.addEventListener('click', (e) => {
-        e.preventDefault();
         const id = card.getAttribute('data-component-id');
         if (id) {
           currentComponentId = id;
@@ -411,15 +455,18 @@ void loop() {
     }
   }
 
-  // Запуск приложения
+  // Запуск
   updateUI();
   
-  // --------------------------------------------------------------
-  //  🛠️ ИНСТРУКЦИЯ ДЛЯ ВАС (выводим в консоль как подсказку)
-  // --------------------------------------------------------------
-  console.log("%c⚡ Arduino Памятка готова к изменениям!", "color: #006d77; font-size: 16px");
-  console.log("%c👉 Чтобы добавить/удалить компонент — напишите мне в чат, и я обновлю массив componentsData. Пример:\n'Добавь сервопривод MG995: подключение сигнал к 9, питание 5V, GND. Код: Servo myservo; ...'", "background: #eef2f8; color: #0f3b4a; padding: 4px;");
-  console.log("%c👉 Также можно менять существующие: у кнопки поменять пины, добавить библиотеку и т.д.", "color: #2c7da0;");
+  // Инструкция в консоль
+  console.log("%c📸 Arduino Памятка со СХЕМАМИ-КАРТИНКАМИ!", "color: #006d77; font-size: 14px");
+  console.log("%c👉 КАК ДОБАВИТЬ РЕАЛЬНУЮ КАРТИНКУ:", "font-weight: bold; color: #b45f06");
+  console.log("%c1. Положите файл схемы (например led_connection.png) в папку images/ вашего репозитория", "color: #2c3e50");
+  console.log("%c2. В массиве componentsData найдите нужный компонент и измените:", "color: #2c3e50");
+  console.log("%c   wiringImage: 'images/led_connection.png',", "background: #f0f0f0; padding: 2px; font-family: monospace");
+  console.log("%c   isPlaceholder: false,", "background: #f0f0f0; padding: 2px; font-family: monospace");
+  console.log("%c3. Обновите страницу — картинка появится вместо заглушки", "color: #2c3e50");
+  console.log("%c🔥 Вы также можете просто сказать мне: 'Добавь компонент Датчик движения с картинкой images/pir.jpg' — я сгенерирую код!", "background: #e0f0ea; padding: 4px;");
 </script>
 </body>
 </html>
